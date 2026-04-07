@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Kaden's Developer Console Interface Creator
-// @version      1.2
+// @version      1.3
 // @author       Kaden
 // @grant        none
 // ==/UserScript==
-;(function () {
+(function () {
   const ROOT_ID = "kadens-dev-console-ui-root";
   const STYLE_ID = "kadens-dev-console-ui-style";
 
@@ -186,13 +186,15 @@
     const panel = document.createElement("div");
     panel.className = "kui-panel";
     if (panelConfig.panelClass) panel.classList.add(panelConfig.panelClass);
-    if (panelConfig.panelStyle) Object.assign(panel.style, panelConfig.panelStyle);
+    if (panelConfig.panelStyle)
+      Object.assign(panel.style, panelConfig.panelStyle);
 
     if (title) {
       const header = document.createElement("div");
       header.className = "kui-header";
       header.textContent = title;
-      if (panelConfig.headerStyle) Object.assign(header.style, panelConfig.headerStyle);
+      if (panelConfig.headerStyle)
+        Object.assign(header.style, panelConfig.headerStyle);
       panel.appendChild(header);
     }
 
@@ -243,7 +245,8 @@
     if (options.title) button.title = options.title;
     if (options.className) button.classList.add(options.className);
     if (options.style) Object.assign(button.style, options.style);
-    if (typeof onClick === "function") button.addEventListener("click", onClick);
+    if (typeof onClick === "function")
+      button.addEventListener("click", onClick);
     return button;
   }
 
@@ -257,9 +260,10 @@
     if (options.className) input.classList.add(options.className);
     if (options.style) Object.assign(input.style, options.style);
     if (options.onChange) input.addEventListener("input", options.onChange);
-    if (options.onEnter) input.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") options.onEnter(event);
-    });
+    if (options.onEnter)
+      input.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") options.onEnter(event);
+      });
     return input;
   }
 
@@ -294,7 +298,8 @@
       }
       select.appendChild(option);
     });
-    if (typeof onChange === "function") select.addEventListener("change", onChange);
+    if (typeof onChange === "function")
+      select.addEventListener("change", onChange);
     return select;
   }
 
@@ -309,7 +314,8 @@
     if (options.id) checkbox.id = options.id;
     if (options.className) wrapper.classList.add(options.className);
     if (options.style) Object.assign(wrapper.style, options.style);
-    if (typeof onChange === "function") checkbox.addEventListener("change", () => onChange(checkbox.checked));
+    if (typeof onChange === "function")
+      checkbox.addEventListener("change", () => onChange(checkbox.checked));
     const label = document.createElement("span");
     label.textContent = labelText || "";
     wrapper.appendChild(checkbox);
@@ -329,7 +335,8 @@
 
   function showToast(message, type = "default", duration = 3200) {
     const toast = document.createElement("div");
-    toast.className = `kui-toast ${type === "success" ? "kui-success" : type === "error" ? "kui-error" : ""}`.trim();
+    toast.className =
+      `kui-toast ${type === "success" ? "kui-success" : type === "error" ? "kui-error" : ""}`.trim();
     toast.textContent = message;
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), duration);
@@ -342,7 +349,8 @@
   }
 
   function updateStyles(cssString) {
-    currentConfig.customCss = (currentConfig.customCss || "") + "\n" + cssString;
+    currentConfig.customCss =
+      (currentConfig.customCss || "") + "\n" + cssString;
     injectStyles();
   }
 
@@ -403,84 +411,3 @@
     module.exports = api;
   }
 })();
-
-  function createTextarea(placeholder, options = {}) {
-    const textarea = document.createElement("textarea");
-    textarea.className = "kui-textarea";
-    textarea.placeholder = placeholder || "";
-    if (options.id) textarea.id = options.id;
-    if (options.value) textarea.value = options.value;
-    if (options.rows) textarea.rows = options.rows;
-    if (options.onChange) textarea.addEventListener("input", options.onChange);
-    return textarea;
-  }
-
-  function createSelect(items = [], onChange, options = {}) {
-    const select = document.createElement("select");
-    select.className = "kui-select";
-    if (options.id) select.id = options.id;
-    items.forEach((item) => {
-      const option = document.createElement("option");
-      if (typeof item === "object") {
-        option.value = item.value;
-        option.textContent = item.label;
-        if (item.selected) option.selected = true;
-      } else {
-        option.value = item;
-        option.textContent = item;
-      }
-      select.appendChild(option);
-    });
-    if (typeof onChange === "function")
-      select.addEventListener("change", onChange);
-    return select;
-  }
-
-  function createToggle(labelText, isChecked, onChange, options = {}) {
-    const wrapper = document.createElement("label");
-    wrapper.className = "kui-row";
-    wrapper.style.alignItems = "center";
-    wrapper.style.gap = "8px";
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = Boolean(isChecked);
-    if (options.id) checkbox.id = options.id;
-    if (typeof onChange === "function")
-      checkbox.addEventListener("change", () => onChange(checkbox.checked));
-    const label = document.createElement("span");
-    label.textContent = labelText || "";
-    wrapper.appendChild(checkbox);
-    wrapper.appendChild(label);
-    return wrapper;
-  }
-
-  function showToast(message, type = "default", duration = 3200) {
-    const toast = document.createElement("div");
-    toast.className =
-      `kui-toast ${type === "success" ? "kui-success" : type === "error" ? "kui-error" : ""}`.trim();
-    toast.textContent = message;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), duration);
-    return toast;
-  }
-
-  const api = {
-    init,
-    createPanel,
-    createButton,
-    createInput,
-    createTextarea,
-    createSelect,
-    createToggle,
-    createRow,
-    showToast,
-    getRoot,
-  };
-
-  global.KadensDeveloperConsoleInterfaceCreator = api;
-  global.KadenUI = api;
-
-  if (typeof module !== "undefined" && module.exports) {
-    module.exports = api;
-  }
-})(typeof window !== "undefined" ? window : this);
